@@ -5,7 +5,6 @@ services:
     build: .
     volumes:
       - .:/app
-      - /app/tmp
     ports:
       - "9090:9090"
     depends_on:
