@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-// NewValidatorBuilder().Property("test").Validators([]string{ValidatorTypes.IsRequired}).Data(map[string]interface{}{"test": "test"}).Validate()
-
 var ValidatorTypes = struct {
 	IsRequired string
 	IsEmail    string
