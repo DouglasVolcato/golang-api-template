@@ -10,6 +10,10 @@ type Transaction struct {
 	databaseConnection *sql.DB
 }
 
+func NewTransaction(databaseConnection *sql.DB) *Transaction {
+	return &Transaction{databaseConnection: databaseConnection}
+}
+
 func (transaction *Transaction) BeginTransaction() error {
 	var err error
 	transaction.transaction, err = transaction.databaseConnection.Begin()
