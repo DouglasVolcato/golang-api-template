@@ -7,17 +7,12 @@ import (
 )
 
 type Repository struct {
-	tableName     string
-	idField       string
-	fields        []string
-	publicFields  []string
-	privateFields []string
-	insertFields  []string
-	updateFields  []string
-}
-
-func NewRepository(tableName string, idField string, fields []string, publicFields []string, privateFields []string, insertFields []string, updateFields []string) *Repository {
-	return &Repository{tableName: tableName, idField: idField, fields: fields, publicFields: publicFields, privateFields: privateFields, insertFields: insertFields, updateFields: updateFields}
+	tableName    string
+	idField      string
+	fields       []string
+	publicFields []string
+	insertFields []string
+	updateFields []string
 }
 
 func (repo *Repository) Insert(transaction *Transaction, values []any) {
@@ -33,7 +28,7 @@ func (repo *Repository) Delete(transaction *Transaction, id string) {
 }
 
 func (repo *Repository) Select(transaction *Transaction, id string) (*sql.Rows, error) {
-	return ExecuteQuery(transaction, fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", strings.Join(repo.publicFields, ", "), repo.tableName, repo.idField), id)
+	return ExecuteQuery(transaction, fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", strings.Join(repo.fields, ", "), repo.tableName, repo.idField), id)
 }
 
 func (repo *Repository) SelectAll(transaction *Transaction, limit int, offset int) (*sql.Rows, error) {
