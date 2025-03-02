@@ -1,5 +1,7 @@
 package middlewares
 
-func BaseMiddleware(data interface{}) (interface{}, error) {
-	return data, nil
+var BaseMiddleware = Middleware{
+	Execute: func(data any) (any, error) {
+		return data, nil
+	},
 }
