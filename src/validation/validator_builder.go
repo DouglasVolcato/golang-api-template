@@ -20,7 +20,7 @@ var ValidatorTypes = struct {
 }
 
 type ValidatorBuilder struct {
-	data           interface{}
+	data           any
 	property       string
 	validatorTypes []string
 }
@@ -39,7 +39,7 @@ func (builder *ValidatorBuilder) Validators(validatorTypes []string) *ValidatorB
 	return builder
 }
 
-func (builder *ValidatorBuilder) Data(data interface{}) *ValidatorBuilder {
+func (builder *ValidatorBuilder) Data(data any) *ValidatorBuilder {
 	builder.data = data
 	return builder
 }
@@ -47,14 +47,14 @@ func (builder *ValidatorBuilder) Data(data interface{}) *ValidatorBuilder {
 func (builder *ValidatorBuilder) Validate() error {
 	for _, validatorType := range builder.validatorTypes {
 		if validatorType == ValidatorTypes.IsRequired && builder.data != nil {
-			_, exists := builder.data.(map[string]interface{})[builder.property]
+			_, exists := builder.data.(map[string]any)[builder.property]
 			if !exists {
 				return fmt.Errorf("%s é obrigatório", builder.property)
 			}
 		}
 
 		if validatorType == ValidatorTypes.IsEmail {
-			if email, exists := builder.data.(map[string]interface{})[builder.property]; exists {
+			if email, exists := builder.data.(map[string]any)[builder.property]; exists {
 				if _, ok := email.(string); !ok || !strings.Contains(email.(string), "@") {
 					return fmt.Errorf("%s está inválido", builder.property)
 				}
@@ -62,24 +62,24 @@ func (builder *ValidatorBuilder) Validate() error {
 		}
 
 		if validatorType == ValidatorTypes.IsString {
-			if _, exists := builder.data.(map[string]interface{})[builder.property]; exists {
-				if _, ok := builder.data.(map[string]interface{})[builder.property].(string); !ok {
+			if _, exists := builder.data.(map[string]any)[builder.property]; exists {
+				if _, ok := builder.data.(map[string]any)[builder.property].(string); !ok {
 					return fmt.Errorf("%s está inválido", builder.property)
 				}
 			}
 		}
 
 		if validatorType == ValidatorTypes.IsInteger {
-			if _, exists := builder.data.(map[string]interface{})[builder.property]; exists {
-				if _, ok := builder.data.(map[string]interface{})[builder.property].(int); !ok {
+			if _, exists := builder.data.(map[string]any)[builder.property]; exists {
+				if _, ok := builder.data.(map[string]any)[builder.property].(int); !ok {
 					return fmt.Errorf("%s está inválido", builder.property)
 				}
 			}
 		}
 
 		if validatorType == ValidatorTypes.IsFloat {
-			if _, exists := builder.data.(map[string]interface{})[builder.property]; exists {
-				if _, ok := builder.data.(map[string]interface{})[builder.property].(float64); !ok {
+			if _, exists := builder.data.(map[string]any)[builder.property]; exists {
+				if _, ok := builder.data.(map[string]any)[builder.property].(float64); !ok {
 					return fmt.Errorf("%s está inválido", builder.property)
 				}
 			}
