@@ -15,11 +15,15 @@ type Repository struct {
 	updateFields []string
 }
 
+func NewRepository(tableName string, idField string, fields []string, publicFields []string, insertFields []string, updateFields []string) *Repository {
+	return &Repository{tableName: tableName, idField: idField, fields: fields, publicFields: publicFields, insertFields: insertFields, updateFields: updateFields}
+}
+
 func (repo *Repository) Insert(transaction *Transaction, values []any) {
 	ExecuteSQL(transaction, fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", repo.tableName, strings.Join(repo.insertFields, ", "), strings.Repeat("?", len(repo.insertFields))), values...)
 }
 
-func (repo *Repository) Update(transaction *Transaction, values []any) {
+func (repo *Repository) Update(transaction *Transaction, id string, values []any) {
 	ExecuteSQL(transaction, fmt.Sprintf("UPDATE %s SET %s WHERE %s = ?", repo.tableName, strings.Join(repo.updateFields, ", "), repo.idField), values...)
 }
 
