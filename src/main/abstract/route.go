@@ -19,9 +19,9 @@ var RouteMethodTypes = struct {
 	PATCH:  "PATCH",
 }
 
-type Route[I any, O any] struct {
+type Route struct {
 	Path        string
 	Method      string
-	Controller  *controllers.Controller[I, O]
+	Controller  *controllers.Controller
 	Middlewares []*middlewares.Middleware
 }

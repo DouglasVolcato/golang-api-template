@@ -1,26 +1,22 @@
 package usecases
 
 import (
+	"app/src/domain/abstract"
 	"app/src/infra/database"
 	"app/src/validation"
 )
 
-type UseCase[I any, O any] struct {
+type UseCase struct {
 	Validators []*validation.ValidatorBuilder
-	Handle     func(transaction *database.Transaction, data I) (O, error)
+	Execute    func(transaction *database.Transaction, data abstract.DtoType) (abstract.DtoType, error)
 }
 
-func (usecase *UseCase[I, O]) Execute(transaction *database.Transaction, data I) (O, error) {
-	var validators = []*validation.ValidatorBuilder{
-		validation.NewValidatorBuilder().Property("test").Validators([]string{validation.ValidatorTypes.IsRequired}),
-	}
-	for _, validator := range validators {
+func (usecase *UseCase) Validate(data abstract.DtoType) error {
+	for _, validator := range usecase.Validators {
 		error := validator.Data(data).Validate()
 		if error != nil {
-			var zero O
-			return zero, error
+			return error
 		}
 	}
-
-	return usecase.Execute(transaction, data)
+	return nil
 }

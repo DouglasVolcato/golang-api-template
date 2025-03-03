@@ -1,41 +1,45 @@
 package controllers
 
 import (
+	"app/src/domain/abstract"
 	"app/src/domain/usecases"
 	"app/src/infra/database"
 	"database/sql"
 )
 
-type Controller[I any, O any] struct {
-	usecase *usecases.UseCase[I, O]
+type Controller struct {
+	usecase *usecases.UseCase
 }
 
-func NewController[I any, O any](usecase *usecases.UseCase[I, O]) *Controller[I, O] {
-	return &Controller[I, O]{usecase: usecase}
+func NewController(usecase *usecases.UseCase) *Controller {
+	return &Controller{usecase: usecase}
 }
 
-func (controller *Controller[I, O]) Execute(databaseConnection *sql.DB, data I) (O, error) {
+func (controller *Controller) Execute(databaseConnection *sql.DB, data abstract.DtoType) (abstract.DtoType, error, int) {
 	var transaction = database.NewTransaction(databaseConnection)
 	var err error
 
 	err = transaction.BeginTransaction()
 	if err != nil {
-		var empty O
-		return empty, err
+		return nil, err, 500
+	}
+
+	err = controller.usecase.Validate(data)
+	if err != nil {
+		transaction.RollbackTransaction()
+		return nil, err, 400
 	}
 
 	response, err := controller.usecase.Execute(transaction, data)
 	if err != nil {
 		transaction.RollbackTransaction()
-		var empty O
-		return empty, err
+		return nil, err, 500
 	}
 
 	err = transaction.CommitTransaction()
 	if err != nil {
-		var empty O
-		return empty, err
+		return nil, err, 500
 	}
 
-	return response, nil
+	return response, nil, 200
 }

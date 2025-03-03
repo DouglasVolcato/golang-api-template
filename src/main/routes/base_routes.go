@@ -7,10 +7,10 @@ import (
 	"app/src/presentation/middlewares"
 )
 
-var BaseRoutes = []abstract.Route[usecases.BaseUsecaseInput, usecases.BaseUsecaseOutput]{
+var BaseRoutes = []abstract.Route{
 	{
-		Path:        "/",
-		Method:      abstract.RouteMethodTypes.GET,
+		Path:        "/test",
+		Method:      abstract.RouteMethodTypes.POST,
 		Controller:  controllers.NewController(&usecases.BaseUsecase),
 		Middlewares: []*middlewares.Middleware{&middlewares.BaseMiddleware},
 	},
