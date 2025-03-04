@@ -21,7 +21,7 @@ func main() {
 	os.Setenv("PORT", "9090")
 	var router = gin.Default()
 
-	docGenerator := docs.NewApiDocGenerator(router)
+	docGenerator := docs.NewApiDocGenerator("Api", "Api description", router)
 	docGenerator.RegisterRoutes(routes.BaseRoutes)
 
 	var databaseConnection = database.InitializeDatabaseConnection()

@@ -12,11 +12,13 @@ import (
 )
 
 type ApiDocGenerator struct {
-	router *gin.Engine
+	name        string
+	description string
+	router      *gin.Engine
 }
 
-func NewApiDocGenerator(router *gin.Engine) *ApiDocGenerator {
-	return &ApiDocGenerator{router: router}
+func NewApiDocGenerator(name string, description string, router *gin.Engine) *ApiDocGenerator {
+	return &ApiDocGenerator{name: name, description: description, router: router}
 }
 
 func (s *ApiDocGenerator) RegisterRoutes(routes []abstract.Route) {
@@ -49,9 +51,8 @@ func (s *ApiDocGenerator) RegisterRoutes(routes []abstract.Route) {
 
 	api := swag.New(
 		swag.Endpoints(endpoints...),
-		swag.Description("This is the api"),
-		swag.Version("1.0.0"),
-		swag.Title("Api"),
+		swag.Description(s.description),
+		swag.Title(s.name),
 	)
 
 	enableCors := true
@@ -66,7 +67,7 @@ func (s *ApiDocGenerator) RegisterRoutes(routes []abstract.Route) {
 		<!DOCTYPE html>
 		<html>
 		<head>
-			<title>Scalar API Reference</title>
+			<title>Docs - `+s.name+`</title>
 			<meta charset="utf-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1" />
 		</head>
