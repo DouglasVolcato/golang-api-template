@@ -9,6 +9,7 @@ import (
 
 var BaseRoutes = []abstract.Route{
 	{
+		Name:         "Test",
 		Path:         "/test",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(&usecases.BaseUsecase),

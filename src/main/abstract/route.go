@@ -20,6 +20,7 @@ var RouteMethodTypes = struct {
 }
 
 type Route struct {
+	Name         string
 	Path         string
 	Method       string
 	Controller   *controllers.Controller
