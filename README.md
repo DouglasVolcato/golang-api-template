@@ -28,6 +28,9 @@ All migrations can be found in the `db/migrations` directory. They are executed 
 ### Repositories
 All repositories have the default crud methods implemented. You can find the repositories in the `src/infra/repositories` directory. They extend the `src/infra/database/repository.go` repository and add some configuration to define the table, id field and fields to be used in the repository.
 
+### Entities
+All entities can be found in the `src/domain/abstract/entities` directory. They are used to represent the data, generally used to add usecases output types.
+
 ### Validator
 It is used to build the data validators for the usecases. The default validator builder can be found at `src/validation/validator_builder.go`.
 
