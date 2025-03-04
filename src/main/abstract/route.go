@@ -20,8 +20,10 @@ var RouteMethodTypes = struct {
 }
 
 type Route struct {
-	Path        string
-	Method      string
-	Controller  *controllers.Controller
-	Middlewares []*middlewares.Middleware
+	Path         string
+	Method       string
+	Controller   *controllers.Controller
+	Middlewares  []*middlewares.Middleware
+	RequestType  interface{}
+	ResponseType interface{}
 }

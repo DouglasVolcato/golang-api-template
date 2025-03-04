@@ -8,6 +8,14 @@ import (
 	"app/src/validation"
 )
 
+type BaseUsecaseInput struct {
+	Name string `json:"name" example:"John Doe"`
+}
+
+type BaseUsecaseOutput struct {
+	Message string `json:"message" example:"Item created successfully"`
+}
+
 var BaseUsecase = UseCase{
 	Validators: []*validation.ValidatorBuilder{
 		validation.NewValidatorBuilder().Property("name", "Name").Validators([]string{validation.ValidatorTypes.IsRequired}),
