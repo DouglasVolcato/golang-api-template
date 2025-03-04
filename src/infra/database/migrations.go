@@ -44,7 +44,7 @@ func ExecuteDatabaseMigrations(globalDatabaseConnection *sql.DB) error {
 				return err
 			}
 			_, err = globalDatabaseConnection.Exec(
-				"INSERT INTO migrations (id, name) VALUES ($1, $1)",
+				"INSERT INTO migrations (id, name) VALUES ($1, $2)",
 				utils.GenerateUuid(),
 				file.Name(),
 			)
