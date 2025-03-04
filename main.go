@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"app/src/domain/abstract"
+	"app/src/domain/abstract/dtos"
 	"app/src/infra/database"
 	"app/src/main/docs"
 	"app/src/main/routes"
@@ -48,7 +48,7 @@ func main() {
 		var middlewares = route.Middlewares
 
 		router.Handle(method, path, func(context *gin.Context) {
-			var data = abstract.DtoType{}
+			var data = dtos.DtoType{}
 			var err error
 
 			for key, value := range context.Request.Header {
@@ -59,7 +59,7 @@ func main() {
 				data[key] = value
 			}
 
-			body := abstract.DtoType{}
+			body := dtos.DtoType{}
 			if err := context.BindJSON(&body); err == nil {
 				for key, value := range body {
 					data[key] = value

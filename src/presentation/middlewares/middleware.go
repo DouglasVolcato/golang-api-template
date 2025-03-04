@@ -1,7 +1,7 @@
 package middlewares
 
-import "app/src/domain/abstract"
+import "app/src/domain/abstract/dtos"
 
 type Middleware struct {
-	Execute func(data abstract.DtoType) (abstract.DtoType, error)
+	Execute func(data dtos.DtoType) (dtos.DtoType, error)
 }

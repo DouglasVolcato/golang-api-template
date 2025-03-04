@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"app/src/domain/abstract"
+	"app/src/domain/abstract/dtos"
 	"app/src/domain/usecases"
 	"app/src/infra/database"
 	"database/sql"
@@ -15,7 +15,7 @@ func NewController(usecase *usecases.UseCase) *Controller {
 	return &Controller{usecase: usecase}
 }
 
-func (controller *Controller) Execute(databaseConnection *sql.DB, data abstract.DtoType) (abstract.DtoType, error, int) {
+func (controller *Controller) Execute(databaseConnection *sql.DB, data dtos.DtoType) (dtos.DtoType, error, int) {
 	var transaction = database.NewTransaction(databaseConnection)
 	var err error
 
