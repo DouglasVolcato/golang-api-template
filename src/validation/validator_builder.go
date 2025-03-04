@@ -23,6 +23,7 @@ var ValidatorTypes = struct {
 type ValidatorBuilder struct {
 	data           abstract.DtoType
 	property       string
+	label          string
 	validatorTypes []string
 }
 
@@ -30,8 +31,9 @@ func NewValidatorBuilder() *ValidatorBuilder {
 	return &ValidatorBuilder{}
 }
 
-func (builder *ValidatorBuilder) Property(property string) *ValidatorBuilder {
+func (builder *ValidatorBuilder) Property(property string, label string) *ValidatorBuilder {
 	builder.property = property
+	builder.label = label
 	return builder
 }
 
@@ -54,7 +56,7 @@ func (builder *ValidatorBuilder) Validate() error {
 	if !exists {
 		for _, validatorType := range builder.validatorTypes {
 			if validatorType == ValidatorTypes.IsRequired {
-				return fmt.Errorf("%s é obrigatório", builder.property)
+				return fmt.Errorf("%s é obrigatório", builder.label)
 			}
 		}
 		return nil
@@ -64,22 +66,22 @@ func (builder *ValidatorBuilder) Validate() error {
 		switch validatorType {
 		case ValidatorTypes.IsEmail:
 			if str, ok := value.(string); !ok || !strings.Contains(str, "@") {
-				return fmt.Errorf("%s está inválido", builder.property)
+				return fmt.Errorf("%s is invalid", builder.label)
 			}
 
 		case ValidatorTypes.IsString:
 			if _, ok := value.(string); !ok {
-				return fmt.Errorf("%s deve ser uma string", builder.property)
+				return fmt.Errorf("%s must be a string", builder.label)
 			}
 
 		case ValidatorTypes.IsInteger:
 			if _, ok := value.(int); !ok {
-				return fmt.Errorf("%s deve ser um número inteiro", builder.property)
+				return fmt.Errorf("%s must be an integer number", builder.label)
 			}
 
 		case ValidatorTypes.IsFloat:
 			if _, ok := value.(float64); !ok {
-				return fmt.Errorf("%s deve ser um número decimal", builder.property)
+				return fmt.Errorf("%s must be a decimal number", builder.label)
 			}
 		}
 	}

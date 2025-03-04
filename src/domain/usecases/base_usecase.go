@@ -10,7 +10,7 @@ import (
 
 var BaseUsecase = UseCase{
 	Validators: []*validation.ValidatorBuilder{
-		validation.NewValidatorBuilder().Property("name").Validators([]string{validation.ValidatorTypes.IsRequired}),
+		validation.NewValidatorBuilder().Property("name", "Name").Validators([]string{validation.ValidatorTypes.IsRequired}),
 	},
 	Execute: func(transaction *database.Transaction, data abstract.DtoType) (abstract.DtoType, error) {
 		var repository = repositories.BaseRepository
