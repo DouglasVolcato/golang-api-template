@@ -5,7 +5,7 @@ import (
 )
 
 var BaseRepository = database.NewRepository(
-	"base",
+	"base_table",
 	"id",
 	[]string{"id", "name", "created_at", "updated_at"},
 	[]string{"id", "name", "created_at"},

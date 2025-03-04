@@ -4,11 +4,14 @@ import (
 	"database/sql"
 )
 
-func ExecuteSQL(transaction *Transaction, sqlQuery string, args ...any) (sql.Result, error) {
+func ExecuteSQL(transaction *Transaction, sqlQuery string, args ...any) error {
 	if transaction.transaction != nil {
-		return transaction.transaction.Exec(sqlQuery, args...)
+		_, err := transaction.transaction.Exec(sqlQuery, args...)
+		return err
+	} else {
+		_, err := transaction.databaseConnection.Exec(sqlQuery, args...)
+		return err
 	}
-	return transaction.databaseConnection.Exec(sqlQuery, args...)
 }
 
 func ExecuteQuery(transaction *Transaction, sqlQuery string, args ...any) (*sql.Rows, error) {

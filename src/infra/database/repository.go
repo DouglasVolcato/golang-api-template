@@ -19,16 +19,41 @@ func NewRepository(tableName string, idField string, fields []string, publicFiel
 	return &Repository{tableName: tableName, idField: idField, fields: fields, publicFields: publicFields, insertFields: insertFields, updateFields: updateFields}
 }
 
-func (repo *Repository) Insert(transaction *Transaction, values []any) {
-	ExecuteSQL(transaction, fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", repo.tableName, strings.Join(repo.insertFields, ", "), strings.Repeat("?", len(repo.insertFields))), values...)
+func (repo *Repository) Insert(transaction *Transaction, values []any) error {
+	placeholders := make([]string, len(repo.insertFields))
+	for i := range placeholders {
+		placeholders[i] = fmt.Sprintf("$%d", i+1)
+	}
+
+	sqlQuery := fmt.Sprintf(
+		"INSERT INTO %s (%s) VALUES (%s)",
+		repo.tableName,
+		strings.Join(repo.insertFields, ", "),
+		strings.Join(placeholders, ", "),
+	)
+
+	return ExecuteSQL(transaction, sqlQuery, values...)
 }
 
-func (repo *Repository) Update(transaction *Transaction, id string, values []any) {
-	ExecuteSQL(transaction, fmt.Sprintf("UPDATE %s SET %s WHERE %s = ?", repo.tableName, strings.Join(repo.updateFields, ", "), repo.idField), values...)
+func (repo *Repository) Update(transaction *Transaction, id string, values []any) error {
+	placeholders := make([]string, len(repo.updateFields))
+	for i := range placeholders {
+		placeholders[i] = fmt.Sprintf("%s = $%d", repo.updateFields[i], i+1)
+	}
+
+	sqlQuery := fmt.Sprintf(
+		"UPDATE %s SET %s WHERE %s = $%d",
+		repo.tableName,
+		strings.Join(placeholders, ", "),
+		repo.idField,
+		len(repo.updateFields)+1,
+	)
+
+	return ExecuteSQL(transaction, sqlQuery, append(values, id)...)
 }
 
-func (repo *Repository) Delete(transaction *Transaction, id string) {
-	ExecuteSQL(transaction, fmt.Sprintf("DELETE FROM %s WHERE %s = ?", repo.tableName, repo.idField), id)
+func (repo *Repository) Delete(transaction *Transaction, id string) error {
+	return ExecuteSQL(transaction, fmt.Sprintf("DELETE FROM %s WHERE %s = ?", repo.tableName, repo.idField), id)
 }
 
 func (repo *Repository) Select(transaction *Transaction, id string) (*sql.Rows, error) {

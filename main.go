@@ -22,6 +22,11 @@ func main() {
 
 	var databaseConnection = database.InitializeDatabaseConnection()
 
+	err := database.ExecuteDatabaseMigrations(databaseConnection)
+	if err != nil {
+		panic(err)
+	}
+
 	router.GET("/", func(context *gin.Context) {
 		fmt.Print(routes.BaseRoutes)
 		context.JSON(200, gin.H{
