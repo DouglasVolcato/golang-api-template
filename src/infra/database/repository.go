@@ -67,21 +67,33 @@ func (repo *Repository) Update(transaction *Transaction, id string, values []any
 }
 
 func (repo *Repository) Delete(transaction *Transaction, id string) error {
-	return ExecuteSQL(transaction, fmt.Sprintf("DELETE FROM %s WHERE %s = ?", repo.tableName, repo.idField), id)
-}
-
-func (repo *Repository) Select(transaction *Transaction, id string) (*sql.Rows, error) {
-	return ExecuteQuery(
+	placeholder := fmt.Sprintf("$%d", 1)
+	return ExecuteSQL(
 		transaction,
-		fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", strings.Join(repo.fields, ", "),
+		fmt.Sprintf(
+			"DELETE FROM %s WHERE %s = %s",
 			repo.tableName,
-			repo.idField),
-		id,
-	)
+			repo.idField,
+			placeholder,
+		),
+		id)
 }
 
-func (repo *Repository) SelectAll(transaction *Transaction, limit int, offset int) (*sql.Rows, error) {
-	return ExecuteQuery(
+func (repo *Repository) Select(transaction *Transaction, id string) ([]map[string]interface{}, error) {
+	placeholder := fmt.Sprintf("$%d", 1)
+	return repo.MapRowsToData(ExecuteQuery(
+		transaction,
+		fmt.Sprintf("SELECT %s FROM %s WHERE %s = %s", strings.Join(repo.fields, ", "),
+			repo.tableName,
+			repo.idField,
+			placeholder,
+		),
+		id,
+	))
+}
+
+func (repo *Repository) SelectAll(transaction *Transaction, limit int, offset int) ([]map[string]interface{}, error) {
+	return repo.MapRowsToData(ExecuteQuery(
 		transaction,
 		fmt.Sprintf(
 			"SELECT %s FROM %s LIMIT %d OFFSET %d", strings.Join(repo.publicFields, ", "),
@@ -89,9 +101,45 @@ func (repo *Repository) SelectAll(transaction *Transaction, limit int, offset in
 			limit,
 			offset,
 		),
-	)
+	))
 }
 
-func (repo *Repository) ExecuteQuery(transaction *Transaction, sqlQuery string, args ...any) (*sql.Rows, error) {
-	return ExecuteQuery(transaction, sqlQuery, args...)
+func (repo *Repository) ExecuteQuery(transaction *Transaction, sqlQuery string, args ...any) ([]map[string]interface{}, error) {
+	return repo.MapRowsToData(ExecuteQuery(transaction, sqlQuery, args...))
+}
+
+func (repo *Repository) MapRowsToData(rows *sql.Rows, err error) ([]map[string]interface{}, error) {
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	columns, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	var results []map[string]interface{}
+	values := make([]interface{}, len(columns))
+	valuePtrs := make([]interface{}, len(columns))
+
+	for i := range values {
+		valuePtrs[i] = &values[i]
+	}
+
+	for rows.Next() {
+		if err := rows.Scan(valuePtrs...); err != nil {
+			return nil, err
+		}
+
+		rowData := make(map[string]interface{})
+		for i, colName := range columns {
+			rowData[colName] = values[i]
+		}
+
+		results = append(results, rowData)
+	}
+
+	return results, rows.Err()
 }
