@@ -1,7 +1,7 @@
 package validation
 
 import (
-	"app/src/domain/abstract"
+	"app/src/domain/abstract/dtos"
 	"fmt"
 	"strings"
 )
@@ -21,7 +21,7 @@ var ValidatorTypes = struct {
 }
 
 type ValidatorBuilder struct {
-	data           abstract.DtoType
+	data           dtos.DtoType
 	property       string
 	label          string
 	validatorTypes []string
@@ -42,7 +42,7 @@ func (builder *ValidatorBuilder) Validators(validatorTypes []string) *ValidatorB
 	return builder
 }
 
-func (builder *ValidatorBuilder) Data(data abstract.DtoType) *ValidatorBuilder {
+func (builder *ValidatorBuilder) Data(data dtos.DtoType) *ValidatorBuilder {
 	builder.data = data
 	return builder
 }
@@ -75,6 +75,13 @@ func (builder *ValidatorBuilder) Validate() error {
 			}
 
 		case ValidatorTypes.IsInteger:
+			if floatValue, ok := value.(float64); ok {
+				if floatValue == float64(int(floatValue)) {
+					value = int(floatValue)
+				} else {
+					return fmt.Errorf("%s must be an integer number", builder.label)
+				}
+			}
 			if _, ok := value.(int); !ok {
 				return fmt.Errorf("%s must be an integer number", builder.label)
 			}
