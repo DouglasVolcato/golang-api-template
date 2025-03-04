@@ -43,7 +43,11 @@ func ExecuteDatabaseMigrations(globalDatabaseConnection *sql.DB) error {
 			if err != nil {
 				return err
 			}
-			_, err = globalDatabaseConnection.Exec("INSERT INTO migrations (id, name) VALUES ($1)", utils.GenerateUuid(), file.Name())
+			_, err = globalDatabaseConnection.Exec(
+				"INSERT INTO migrations (id, name) VALUES ($1)",
+				utils.GenerateUuid(),
+				file.Name(),
+			)
 			if err != nil {
 				return err
 			}

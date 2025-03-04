@@ -15,8 +15,22 @@ type Repository struct {
 	updateFields []string
 }
 
-func NewRepository(tableName string, idField string, fields []string, publicFields []string, insertFields []string, updateFields []string) *Repository {
-	return &Repository{tableName: tableName, idField: idField, fields: fields, publicFields: publicFields, insertFields: insertFields, updateFields: updateFields}
+func NewRepository(
+	tableName string,
+	idField string,
+	fields []string,
+	publicFields []string,
+	insertFields []string,
+	updateFields []string,
+) *Repository {
+	return &Repository{
+		tableName:    tableName,
+		idField:      idField,
+		fields:       fields,
+		publicFields: publicFields,
+		insertFields: insertFields,
+		updateFields: updateFields,
+	}
 }
 
 func (repo *Repository) Insert(transaction *Transaction, values []any) error {
@@ -57,11 +71,25 @@ func (repo *Repository) Delete(transaction *Transaction, id string) error {
 }
 
 func (repo *Repository) Select(transaction *Transaction, id string) (*sql.Rows, error) {
-	return ExecuteQuery(transaction, fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", strings.Join(repo.fields, ", "), repo.tableName, repo.idField), id)
+	return ExecuteQuery(
+		transaction,
+		fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", strings.Join(repo.fields, ", "),
+			repo.tableName,
+			repo.idField),
+		id,
+	)
 }
 
 func (repo *Repository) SelectAll(transaction *Transaction, limit int, offset int) (*sql.Rows, error) {
-	return ExecuteQuery(transaction, fmt.Sprintf("SELECT %s FROM %s LIMIT %d OFFSET %d", strings.Join(repo.publicFields, ", "), repo.tableName, limit, offset))
+	return ExecuteQuery(
+		transaction,
+		fmt.Sprintf(
+			"SELECT %s FROM %s LIMIT %d OFFSET %d", strings.Join(repo.publicFields, ", "),
+			repo.tableName,
+			limit,
+			offset,
+		),
+	)
 }
 
 func (repo *Repository) ExecuteQuery(transaction *Transaction, sqlQuery string, args ...any) (*sql.Rows, error) {
