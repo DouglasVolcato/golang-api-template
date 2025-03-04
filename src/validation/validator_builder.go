@@ -49,14 +49,14 @@ func (builder *ValidatorBuilder) Data(data abstract.DtoType) *ValidatorBuilder {
 
 func (builder *ValidatorBuilder) Validate() error {
 	if builder.data == nil {
-		return fmt.Errorf("dados não fornecidos")
+		return fmt.Errorf("Data is required")
 	}
 
 	value, exists := builder.data[builder.property]
 	if !exists {
 		for _, validatorType := range builder.validatorTypes {
 			if validatorType == ValidatorTypes.IsRequired {
-				return fmt.Errorf("%s é obrigatório", builder.label)
+				return fmt.Errorf("%s is required", builder.label)
 			}
 		}
 		return nil
