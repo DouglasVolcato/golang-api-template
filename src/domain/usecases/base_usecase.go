@@ -17,7 +17,11 @@ var BaseUsecase = UseCase{
 		var id = utils.GenerateUuid()
 		var name = data["name"].(string)
 
-		repository.Insert(transaction, []any{id, name})
+		err := repository.Insert(transaction, []any{id, name})
+
+		if err != nil {
+			return nil, err
+		}
 
 		return abstract.DtoType{"message": name + " created successfully with id " + id}, nil
 	},
