@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"app/src/domain/abstract/dtos"
@@ -18,7 +17,6 @@ func formatMessage(message string) string {
 }
 
 func main() {
-	os.Setenv("PORT", "9090")
 	var router = gin.Default()
 
 	docGenerator := docs.NewApiDocGenerator("Api", "Api description", router)
