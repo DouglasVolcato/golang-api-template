@@ -38,7 +38,7 @@ var BaseRoutes = []abstract.Route{
 	{
 		Name:         "Test Get One",
 		Path:         "/base/get-one",
-		Method:       abstract.RouteMethodTypes.POST,
+		Method:       abstract.RouteMethodTypes.GET,
 		Controller:   controllers.NewController(usecases.GetOneUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
 		RequestType:  usecases.GetOneUsecaseInput{},
@@ -47,7 +47,7 @@ var BaseRoutes = []abstract.Route{
 	{
 		Name:         "Test Get All",
 		Path:         "/base/get-all",
-		Method:       abstract.RouteMethodTypes.POST,
+		Method:       abstract.RouteMethodTypes.GET,
 		Controller:   controllers.NewController(usecases.GetAllUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
 		RequestType:  usecases.GetAllUsecaseInput{},

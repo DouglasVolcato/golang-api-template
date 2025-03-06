@@ -18,9 +18,7 @@ func formatMessage(message string) string {
 
 func main() {
 	var router = gin.Default()
-
-	docGenerator := docs.NewApiDocGenerator("Api", "Api description", router)
-	docGenerator.RegisterRoutes(routes.BaseRoutes)
+	router.LoadHTMLGlob("templates/*")
 
 	var databaseConnection = database.InitializeDatabaseConnection()
 
@@ -29,17 +27,18 @@ func main() {
 		panic(err)
 	}
 
+	var routes = append(routes.BaseRoutes, routes.TemplateRoutes...)
+
+	docGenerator := docs.NewApiDocGenerator("Api", "Api description", router)
+	docGenerator.RegisterRoutes(routes)
+
 	router.GET("/", func(context *gin.Context) {
-		fmt.Print(routes.BaseRoutes)
 		context.JSON(200, gin.H{
 			"message": "Api is running",
 		})
 	})
 
-	for _, route := range routes.BaseRoutes {
-
-		fmt.Println(route)
-
+	for _, route := range routes {
 		var path = route.Path
 		var method = route.Method
 		var controller = route.Controller
@@ -54,7 +53,7 @@ func main() {
 			}
 
 			for key, value := range context.Request.URL.Query() {
-				data[key] = value
+				data[key] = value[0]
 			}
 
 			body := dtos.DtoType{}
@@ -75,14 +74,22 @@ func main() {
 
 			response, err, status := controller.Execute(databaseConnection, data)
 
-			if err != nil {
-				context.JSON(status, gin.H{
-					"error": formatMessage(err.Error()),
-				})
-				return
+			if route.TemplatePath != "" {
+				if err != nil {
+					context.HTML(status, "index.tmpl", err)
+					return
+				}
+				context.HTML(status, route.TemplatePath, struct{}{})
+			} else {
+				if err != nil {
+					context.JSON(status, gin.H{
+						"error": formatMessage(err.Error()),
+					})
+					return
+				}
+				context.JSON(status, response)
 			}
 
-			context.JSON(status, response)
 		})
 	}
 

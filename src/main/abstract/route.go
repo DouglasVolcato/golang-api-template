@@ -25,7 +25,7 @@ type Route struct {
 	Method       string
 	Controller   controllers.Controller
 	Middlewares  []middlewares.Middleware
-	TemplatePath *string
+	TemplatePath string
 	RequestType  interface{}
 	ResponseType interface{}
 }

@@ -2,7 +2,9 @@ package validation
 
 import (
 	"app/src/domain/abstract/dtos"
+	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -49,7 +51,7 @@ func (builder *ValidatorBuilder) Data(data dtos.DtoType) *ValidatorBuilder {
 
 func (builder *ValidatorBuilder) Validate() error {
 	if builder.data == nil {
-		return fmt.Errorf("Data is required")
+		return errors.New("Data is required")
 	}
 
 	value, exists := builder.data[builder.property]
@@ -75,6 +77,13 @@ func (builder *ValidatorBuilder) Validate() error {
 			}
 
 		case ValidatorTypes.IsInteger:
+			if str, ok := value.(string); ok {
+				if intValue, err := strconv.Atoi(str); err == nil {
+					value = intValue
+				} else {
+					return fmt.Errorf("%s must be an integer number", builder.label)
+				}
+			}
 			if floatValue, ok := value.(float64); ok {
 				if floatValue == float64(int(floatValue)) {
 					value = int(floatValue)
@@ -87,6 +96,13 @@ func (builder *ValidatorBuilder) Validate() error {
 			}
 
 		case ValidatorTypes.IsFloat:
+			if str, ok := value.(string); ok {
+				if floatValue, err := strconv.ParseFloat(str, 64); err == nil {
+					value = floatValue
+				} else {
+					return fmt.Errorf("%s must be a decimal number", builder.label)
+				}
+			}
 			if _, ok := value.(float64); !ok {
 				return fmt.Errorf("%s must be a decimal number", builder.label)
 			}

@@ -6,6 +6,7 @@ import (
 	"app/src/infra/database"
 	"app/src/infra/repositories"
 	"app/src/validation"
+	"strconv"
 )
 
 type GetAllUsecaseInput struct {
@@ -34,8 +35,8 @@ var GetAllUsecase = UseCase{
 	},
 	Execute: func(transaction *database.Transaction, data dtos.DtoType) (dtos.DtoType, error) {
 		var repository = repositories.BaseRepository
-		var limit = int(data["limit"].(float64))
-		var offset = int(data["offset"].(float64))
+		limit, _ := strconv.Atoi(data["limit"].(string))
+		offset, _ := strconv.Atoi(data["offset"].(string))
 
 		result, err := repository.SelectAll(transaction, limit, offset)
 
