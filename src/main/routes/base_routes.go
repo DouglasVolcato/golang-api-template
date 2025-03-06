@@ -10,7 +10,7 @@ import (
 var BaseRoutes = []abstract.Route{
 	{
 		Name:         "Test Create",
-		Path:         "/create",
+		Path:         "/base/create",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.CreateUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
@@ -19,7 +19,7 @@ var BaseRoutes = []abstract.Route{
 	},
 	{
 		Name:         "Test Update",
-		Path:         "/update",
+		Path:         "/base/update",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.UpdateUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
@@ -28,7 +28,7 @@ var BaseRoutes = []abstract.Route{
 	},
 	{
 		Name:         "Test Delete",
-		Path:         "/delete",
+		Path:         "/base/delete",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.DeleteUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
@@ -37,7 +37,7 @@ var BaseRoutes = []abstract.Route{
 	},
 	{
 		Name:         "Test Get One",
-		Path:         "/get-one",
+		Path:         "/base/get-one",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.GetOneUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
@@ -46,7 +46,7 @@ var BaseRoutes = []abstract.Route{
 	},
 	{
 		Name:         "Test Get All",
-		Path:         "/get-all",
+		Path:         "/base/get-all",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.GetAllUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
