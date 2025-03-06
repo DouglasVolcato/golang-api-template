@@ -11,7 +11,7 @@ var TemplateRoutes = []abstract.Route{
 	{
 		Name:         "Get All with template",
 		Path:         "template/get-all",
-		Method:       abstract.RouteMethodTypes.POST,
+		Method:       abstract.RouteMethodTypes.GET,
 		Controller:   controllers.NewController(usecases.GetAllUsecase),
 		Middlewares:  []middlewares.Middleware{middlewares.BaseMiddleware},
 		TemplatePath: "index.tmpl",
