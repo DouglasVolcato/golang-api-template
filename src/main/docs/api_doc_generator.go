@@ -61,10 +61,10 @@ func (s *ApiDocGenerator) RegisterRoutes(routes []abstract.Route) {
 
 		if route.TemplatePath != "" {
 			commonParams = append(commonParams,
-				endpoint.Response(200, "text/html", "Default Response - HTML template"),
-				endpoint.Response(400, "text/html", "Request error - HTML template"),
-				endpoint.Response(403, "text/html", "Authentication error - HTML template"),
-				endpoint.Response(500, "text/html", "Server error - HTML template"),
+				endpoint.Response(200, "text/html", "Default Response - HTML"),
+				endpoint.Response(400, "text/html", "Request error - HTML"),
+				endpoint.Response(403, "text/html", "Authentication error - HTML"),
+				endpoint.Response(500, "text/html", "Server error - HTML"),
 			)
 		} else {
 			commonParams = append(commonParams,

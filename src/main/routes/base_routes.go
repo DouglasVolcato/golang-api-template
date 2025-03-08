@@ -9,7 +9,7 @@ import (
 
 var BaseRoutes = []abstract.Route{
 	{
-		Name:         "Test Create",
+		Name:         "Create (JSON)",
 		Path:         "/base/create",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.CreateUsecase),
@@ -18,7 +18,7 @@ var BaseRoutes = []abstract.Route{
 		ResponseType: usecases.CreateUsecaseOutput{},
 	},
 	{
-		Name:         "Test Update",
+		Name:         "Update (JSON)",
 		Path:         "/base/update",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.UpdateUsecase),
@@ -27,7 +27,7 @@ var BaseRoutes = []abstract.Route{
 		ResponseType: usecases.UpdateUsecaseOutput{},
 	},
 	{
-		Name:         "Test Delete",
+		Name:         "Delete (JSON)",
 		Path:         "/base/delete",
 		Method:       abstract.RouteMethodTypes.POST,
 		Controller:   controllers.NewController(usecases.DeleteUsecase),
@@ -36,7 +36,7 @@ var BaseRoutes = []abstract.Route{
 		ResponseType: usecases.DeleteUsecaseOutput{},
 	},
 	{
-		Name:         "Test Get One",
+		Name:         "Get one (JSON)",
 		Path:         "/base/get-one",
 		Method:       abstract.RouteMethodTypes.GET,
 		Controller:   controllers.NewController(usecases.GetOneUsecase),
@@ -45,7 +45,7 @@ var BaseRoutes = []abstract.Route{
 		ResponseType: usecases.GetOneUsecaseOutput{},
 	},
 	{
-		Name:         "Test Get All",
+		Name:         "Get all (JSON)",
 		Path:         "/base/get-all",
 		Method:       abstract.RouteMethodTypes.GET,
 		Controller:   controllers.NewController(usecases.GetAllUsecase),

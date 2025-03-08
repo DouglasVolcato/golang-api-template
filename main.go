@@ -18,7 +18,7 @@ func formatMessage(message string) string {
 
 func main() {
 	var router = gin.Default()
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("src/presentation/templates/**/*")
 
 	var databaseConnection = database.InitializeDatabaseConnection()
 
@@ -57,9 +57,19 @@ func main() {
 			}
 
 			body := dtos.DtoType{}
-			if err := context.BindJSON(&body); err == nil {
-				for key, value := range body {
-					data[key] = value
+			fmt.Println(body)
+
+			if len(body) != 0 {
+				err := context.BindJSON(&body)
+				if err == nil {
+					for key, value := range body {
+						data[key] = value
+					}
+				} else {
+					context.JSON(400, gin.H{
+						"error": formatMessage(err.Error()),
+					})
+					return
 				}
 			}
 
@@ -69,6 +79,7 @@ func main() {
 					context.JSON(400, gin.H{
 						"error": formatMessage(err.Error()),
 					})
+					return
 				}
 			}
 
@@ -76,10 +87,11 @@ func main() {
 
 			if route.TemplatePath != "" {
 				if err != nil {
-					context.HTML(status, "index.tmpl", err)
+					context.HTML(status, "index.html", err)
 					return
 				}
-				context.HTML(status, route.TemplatePath, struct{}{})
+				context.HTML(status, route.TemplatePath, response)
+				return
 			} else {
 				if err != nil {
 					context.JSON(status, gin.H{
@@ -88,8 +100,8 @@ func main() {
 					return
 				}
 				context.JSON(status, response)
+				return
 			}
-
 		})
 	}
 
