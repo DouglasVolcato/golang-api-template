@@ -6,14 +6,19 @@
     <title>Document</title>
   </head>
   <body>
+    <!-- styles -->
     {{template "styles.html"}}
+    <!-- styles -->
+
     {{range .data}}
-        <p>Id {{.id}}</p>
-        <p>Name {{.name}}</p>
-        <p>Created at {{.created_at}}</p>
-    {{end}}
-    {{template "button.html"}}
-</body>
+    <p>Id {{.id}}</p>
+    <p>Name {{.name}}</p>
+    <p>Created at {{.created_at}}</p>
+    {{end}} {{template "button.html"}}
+    <button id="reload" class="button" hx-get="/html/get-all?limit=100&offset=0" >Reload</button>
 
-
+    <!-- scripts -->
+    {{template "htmx.html"}} {{template "send_authentication_token.html"}}
+    <!-- scripts -->
+  </body>
 </html>
