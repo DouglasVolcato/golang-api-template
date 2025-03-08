@@ -56,20 +56,12 @@ func main() {
 				data[key] = value[0]
 			}
 
-			body := dtos.DtoType{}
-			fmt.Println(body)
-
-			if len(body) != 0 {
-				err := context.BindJSON(&body)
-				if err == nil {
+			if method != "GET" {
+				body := dtos.DtoType{}
+				if context.BindJSON(&body) == nil {
 					for key, value := range body {
 						data[key] = value
 					}
-				} else {
-					context.JSON(400, gin.H{
-						"error": formatMessage(err.Error()),
-					})
-					return
 				}
 			}
 

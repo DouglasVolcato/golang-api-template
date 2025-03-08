@@ -1,4 +1,4 @@
-package validation
+package utils
 
 import (
 	"app/src/domain/abstract/dtos"

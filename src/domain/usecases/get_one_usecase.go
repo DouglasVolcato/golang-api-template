@@ -3,9 +3,9 @@ package usecases
 import (
 	"app/src/domain/abstract/dtos"
 	"app/src/domain/abstract/entities"
+	"app/src/domain/utils"
 	"app/src/infra/database"
 	"app/src/infra/repositories"
-	"app/src/validation"
 )
 
 type GetOneUsecaseInput struct {
@@ -17,12 +17,12 @@ type GetOneUsecaseOutput struct {
 }
 
 var GetOneUsecase = UseCase{
-	Validators: []*validation.ValidatorBuilder{
-		validation.NewValidatorBuilder().
+	Validators: []*utils.ValidatorBuilder{
+		utils.NewValidatorBuilder().
 			Property("id", "Id").
 			Validators([]string{
-				validation.ValidatorTypes.IsRequired,
-				validation.ValidatorTypes.IsString,
+				utils.ValidatorTypes.IsRequired,
+				utils.ValidatorTypes.IsString,
 			}),
 	},
 	Execute: func(transaction *database.Transaction, data dtos.DtoType) (dtos.DtoType, error) {
