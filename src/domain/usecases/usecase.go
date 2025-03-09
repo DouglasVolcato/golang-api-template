@@ -2,12 +2,12 @@ package usecases
 
 import (
 	"app/src/domain/abstract/dtos"
+	"app/src/domain/utils"
 	"app/src/infra/database"
-	"app/src/validation"
 )
 
 type UseCase struct {
-	Validators []*validation.ValidatorBuilder
+	Validators []*utils.ValidatorBuilder
 	Execute    func(transaction *database.Transaction, data dtos.DtoType) (dtos.DtoType, error)
 }
 

@@ -8,11 +8,11 @@ import (
 )
 
 type Controller struct {
-	usecase *usecases.UseCase
+	usecase usecases.UseCase
 }
 
-func NewController(usecase *usecases.UseCase) *Controller {
-	return &Controller{usecase: usecase}
+func NewController(usecase usecases.UseCase) Controller {
+	return Controller{usecase: usecase}
 }
 
 func (controller *Controller) Execute(databaseConnection *sql.DB, data dtos.DtoType) (dtos.DtoType, error, int) {

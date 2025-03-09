@@ -23,8 +23,9 @@ type Route struct {
 	Name         string
 	Path         string
 	Method       string
-	Controller   *controllers.Controller
-	Middlewares  []*middlewares.Middleware
+	Controller   controllers.Controller
+	Middlewares  []middlewares.Middleware
+	TemplatePath string
 	RequestType  interface{}
 	ResponseType interface{}
 }

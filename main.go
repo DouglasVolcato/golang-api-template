@@ -18,9 +18,7 @@ func formatMessage(message string) string {
 
 func main() {
 	var router = gin.Default()
-
-	docGenerator := docs.NewApiDocGenerator("Api", "Api description", router)
-	docGenerator.RegisterRoutes(routes.BaseRoutes)
+	router.LoadHTMLGlob("src/presentation/templates/**/*")
 
 	var databaseConnection = database.InitializeDatabaseConnection()
 
@@ -29,17 +27,18 @@ func main() {
 		panic(err)
 	}
 
+	var routes = append(routes.BaseRoutes, routes.TemplateRoutes...)
+
+	docGenerator := docs.NewApiDocGenerator("Api", "Api description", router)
+	docGenerator.RegisterRoutes(routes)
+
 	router.GET("/", func(context *gin.Context) {
-		fmt.Print(routes.BaseRoutes)
 		context.JSON(200, gin.H{
 			"message": "Api is running",
 		})
 	})
 
-	for _, route := range routes.BaseRoutes {
-
-		fmt.Println(route)
-
+	for _, route := range routes {
 		var path = route.Path
 		var method = route.Method
 		var controller = route.Controller
@@ -54,13 +53,15 @@ func main() {
 			}
 
 			for key, value := range context.Request.URL.Query() {
-				data[key] = value
+				data[key] = value[0]
 			}
 
-			body := dtos.DtoType{}
-			if err := context.BindJSON(&body); err == nil {
-				for key, value := range body {
-					data[key] = value
+			if method != "GET" {
+				body := dtos.DtoType{}
+				if context.BindJSON(&body) == nil {
+					for key, value := range body {
+						data[key] = value
+					}
 				}
 			}
 
@@ -70,19 +71,29 @@ func main() {
 					context.JSON(400, gin.H{
 						"error": formatMessage(err.Error()),
 					})
+					return
 				}
 			}
 
 			response, err, status := controller.Execute(databaseConnection, data)
 
-			if err != nil {
-				context.JSON(status, gin.H{
-					"error": formatMessage(err.Error()),
-				})
+			if route.TemplatePath != "" {
+				if err != nil {
+					context.HTML(status, "index.html", err)
+					return
+				}
+				context.HTML(status, route.TemplatePath, response)
+				return
+			} else {
+				if err != nil {
+					context.JSON(status, gin.H{
+						"error": formatMessage(err.Error()),
+					})
+					return
+				}
+				context.JSON(status, response)
 				return
 			}
-
-			context.JSON(status, response)
 		})
 	}
 

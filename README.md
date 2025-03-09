@@ -32,7 +32,7 @@ All repositories have the default crud methods implemented. You can find the rep
 All entities can be found in the `src/domain/abstract/entities` directory. They are used to represent the data, generally used to add usecases output types.
 
 ### Validator
-It is used to build the data validators for the usecases. The default validator builder can be found at `src/validation/validator_builder.go`.
+It is used to build the data validators for the usecases. The default validator builder can be found at `src/domain/utils/validator_builder.go`.
 
 ### Usecases (Services)
 All usecases have the configuration of validators and the implementation of the execute method. They extend the `src/domain/usecases/usecase.go` usecase file. You can find the usecases in the `src/domain/usecases` directory. They are responsible for validating the data and executing the business logic.
@@ -45,6 +45,9 @@ Used to validate access and add properties to the input data. All midddlewares c
 
 ### Routes
 All routes are defined in the `src/main/routes` directory. Each route is a struct that contains the name, path, method, controller, middlewares, request type and response type.
+
+### Templates
+Every route can be configured to use a HTML template to embed the returned data. All templates can be found in the `src/presentation/templates` directory.
 
 ### Main
 The `main.go` file is the entry point of the api. It is responsible for starting the api, importing the routes and generating the documentation automatically based on the routes.

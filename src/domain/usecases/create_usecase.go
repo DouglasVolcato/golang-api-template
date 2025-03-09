@@ -5,7 +5,6 @@ import (
 	"app/src/domain/utils"
 	"app/src/infra/database"
 	"app/src/infra/repositories"
-	"app/src/validation"
 )
 
 type CreateUsecaseInput struct {
@@ -17,12 +16,12 @@ type CreateUsecaseOutput struct {
 }
 
 var CreateUsecase = UseCase{
-	Validators: []*validation.ValidatorBuilder{
-		validation.NewValidatorBuilder().
+	Validators: []*utils.ValidatorBuilder{
+		utils.NewValidatorBuilder().
 			Property("name", "Name").
 			Validators([]string{
-				validation.ValidatorTypes.IsRequired,
-				validation.ValidatorTypes.IsString,
+				utils.ValidatorTypes.IsRequired,
+				utils.ValidatorTypes.IsString,
 			}),
 	},
 	Execute: func(transaction *database.Transaction, data dtos.DtoType) (dtos.DtoType, error) {

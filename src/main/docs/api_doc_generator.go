@@ -4,7 +4,9 @@ import (
 	"app/src/main/abstract"
 	"fmt"
 	"net/http"
+	"strings"
 
+	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
 	"github.com/savaki/swag"
 	"github.com/savaki/swag/endpoint"
@@ -32,17 +34,51 @@ func (s *ApiDocGenerator) RegisterRoutes(routes []abstract.Route) {
 	}
 
 	for _, route := range routes {
-		newRoute := endpoint.New(
-			route.Method,
-			route.Path,
-			route.Name,
+		var newRoute *swagger.Endpoint
+
+		var requestData []endpoint.Option
+
+		if route.Method == "GET" {
+			queryParams := make([]endpoint.Option, 0)
+			if structs.IsStruct(route.RequestType) {
+				for _, field := range structs.Fields(route.RequestType) {
+					queryParams = append(queryParams, endpoint.Query(
+						strings.ToLower(field.Name()),
+						fmt.Sprintf("%s %s", strings.ToLower(field.Name()), field.Kind().String()),
+						"query",
+						true,
+					))
+				}
+			}
+			requestData = queryParams
+		} else {
+			requestData = []endpoint.Option{endpoint.Body(route.RequestType, "Request Payload", true)}
+		}
+
+		commonParams := []endpoint.Option{
 			endpoint.Handler(handler),
-			endpoint.Body(route.RequestType, "Request Payload", true),
-			endpoint.Response(200, route.ResponseType, "Default Response"),
-			endpoint.Response(400, ErrorResponse{}, "Request error"),
-			endpoint.Response(403, ErrorResponse{}, "Authentication error"),
-			endpoint.Response(500, ErrorResponse{}, "Server error"),
-		)
+		}
+
+		if route.TemplatePath != "" {
+			commonParams = append(commonParams,
+				endpoint.Response(200, "text/html", "Default Response - HTML"),
+				endpoint.Response(400, "text/html", "Request error - HTML"),
+				endpoint.Response(403, "text/html", "Authentication error - HTML"),
+				endpoint.Response(500, "text/html", "Server error - HTML"),
+			)
+		} else {
+			commonParams = append(commonParams,
+				endpoint.Response(200, route.ResponseType, "Default Response"),
+				endpoint.Response(400, ErrorResponse{}, "Request error"),
+				endpoint.Response(403, ErrorResponse{}, "Authentication error"),
+				endpoint.Response(500, ErrorResponse{}, "Server error"),
+			)
+		}
+
+		// Append request data and create the new route
+		commonParams = append(commonParams, requestData...)
+
+		newRoute = endpoint.New(route.Method, route.Path, route.Name, commonParams...)
 
 		endpoints = append(endpoints, newRoute)
 	}
