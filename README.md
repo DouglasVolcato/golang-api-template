@@ -46,6 +46,9 @@ Used to validate access and add properties to the input data. All midddlewares c
 ### Routes
 All routes are defined in the `src/main/routes` directory. Each route is a struct that contains the name, path, method, controller, middlewares, request type and response type.
 
+### Templates
+Every route can be configured to use a HTML template to embed the returned data. All templates can be found in the `src/presentation/templates` directory.
+
 ### Main
 The `main.go` file is the entry point of the api. It is responsible for starting the api, importing the routes and generating the documentation automatically based on the routes.
 
