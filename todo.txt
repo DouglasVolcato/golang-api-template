@@ -18,3 +18,4 @@ htmx templates
 htmx styles
 cdn in folder
 react projects integration
+testes
