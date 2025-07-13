@@ -8,7 +8,7 @@
 - controller
 - middlewares
 - services
-- db connection
+X db connection
 - repository with query builder
 - migration system
 - automatic documentation
@@ -23,3 +23,4 @@
 - cdn in folder
 - react projects integration
 - testes
+- cache
