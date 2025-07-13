@@ -4,7 +4,7 @@
 - X air config
 - X docker config postgres
 - X config env variables
-- chi api routes
+X chi api routes
 - controller
 - middlewares
 - services
