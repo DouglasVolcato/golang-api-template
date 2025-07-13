@@ -1,7 +1,7 @@
 package db
 
 import (
-	"api-template/src/utils"
+	"api-template/env"
 	"database/sql"
 	"log"
 	"strconv"
@@ -12,7 +12,6 @@ import (
 var GlobalDbConnection *sql.DB
 
 func Connect() {
-	env := utils.Env{}
 	host := env.GetString("DB_HOST", "localhost")
 	port := env.GetInt("DB_PORT", 5432)
 	user := env.GetString("DB_USER", "postgres")

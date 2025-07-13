@@ -1,4 +1,4 @@
-package utils
+package env
 
 import (
 	"log"
@@ -8,10 +8,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Env struct {
-}
-
-func (e *Env) loadEnv() bool {
+func loadEnv() bool {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -20,8 +17,8 @@ func (e *Env) loadEnv() bool {
 	return true
 }
 
-func (e *Env) GetString(key string, fallback string) string {
-	if !e.loadEnv() {
+func GetString(key string, fallback string) string {
+	if !loadEnv() {
 		return fallback
 	}
 
@@ -32,8 +29,8 @@ func (e *Env) GetString(key string, fallback string) string {
 	return fallback
 }
 
-func (e *Env) GetInt(key string, fallback int) int {
-	if !e.loadEnv() {
+func GetInt(key string, fallback int) int {
+	if !loadEnv() {
 		return fallback
 	}
 
