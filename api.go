@@ -18,6 +18,22 @@ func NewApi() *Api {
 	return &Api{}
 }
 
+type RateLimitOptions struct {
+	Max    int
+	Window time.Duration
+}
+
+type ApiRoute struct {
+	Path             string
+	Method           string
+	Handler          http.Handler
+	Title            string
+	Description      string
+	RateLimitOptions RateLimitOptions
+	Input            any
+	Output           any
+}
+
 func (app *Api) Mount() {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Logger)
@@ -26,11 +42,26 @@ func (app *Api) Mount() {
 	mux.Use(middleware.Recoverer)
 	mux.Use(middleware.Timeout(60 * time.Second))
 
-	mux.Route("/v1", func(r chi.Router) {
-		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("TESTE"))
+	routes := []ApiRoute{
+		{
+			Path:   "/v1",
+			Method: "GET",
+			Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Write([]byte("TEST"))
+			}),
+			Title:            "Test",
+			Description:      "Test",
+			RateLimitOptions: RateLimitOptions{Max: 20, Window: time.Minute},
+			Input:            `{"example": "value"}`,
+			Output:           `{"example": "value"}`,
+		},
+	}
+
+	for _, route := range routes {
+		mux.Route(route.Path, func(r chi.Router) {
+			r.Method(route.Method, "/", route.Handler)
 		})
-	})
+	}
 
 	app.mux = mux
 }
